@@ -1,5 +1,7 @@
 export interface ITodoService {
-  get: () => Promise<Todo[]>;
+  get: (showComplete: boolean) => Promise<Todo[]>;
+  complete: (id: string) => Promise<void>;
+  create: (newTodo: string) => Promise<void>;
 }
 
 export interface Todo {

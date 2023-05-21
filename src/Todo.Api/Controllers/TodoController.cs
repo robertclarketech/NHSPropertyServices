@@ -24,9 +24,9 @@ public class TodoController : ControllerBase
 	}
 
 	[HttpGet]
-	public async Task<ActionResult<IEnumerable<TodoItem>>> List(CancellationToken token)
+	public async Task<ActionResult<IEnumerable<TodoItem>>> List([FromQuery]ListTodoItemsRequest request,CancellationToken token)
 	{
-		return Ok(await _sender.Send(new ListTodoItemsRequest(), token));
+		return Ok(await _sender.Send(request, token));
 	}
 	
 	[HttpPost("{id:guid}/complete")]

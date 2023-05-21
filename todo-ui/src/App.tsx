@@ -1,15 +1,12 @@
-import { Container, Paper, Stack } from "@mui/material";
+import { Container } from "@mui/material";
 import { TodoServiceContextProvider } from "src/Contexts/TodoServiceContext.tsx";
-import TodosList from "src/Components/TodosList.tsx";
+import Todos from "src/Components/Todos.tsx";
 
 export function App() {
   return (
     <TodoServiceContextProvider>
       <Container>
-        <Stack gap={2}>
-          <Paper>asd</Paper>
-          <TodosList />
-        </Stack>
+        <Todos />
       </Container>
     </TodoServiceContextProvider>
   );
