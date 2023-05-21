@@ -24,4 +24,28 @@ public class ListTodoItemsHandlerTests : TodoContextTestsBase
 
 		result.Should().StartWith(latest).And.EndWith(old);
 	}
+
+	[Fact]
+	public async Task Show_completed_true_should_return_completed_todos()
+	{
+		var completed = new TodoItem {Completed = DateTime.UtcNow.AddDays(-1)};
+		var uncompleted = new TodoItem();
+		TodoItems.AddRange(new[] {completed, uncompleted});
+
+		var result = await _handler.Handle(new ListTodoItemsRequest(true), CancellationToken.None);
+
+		result.Should().Contain(completed).And.Contain(uncompleted);
+	}
+	
+	[Fact]
+	public async Task Show_completed_false_should_not_return_completed_todos()
+	{
+		var completed = new TodoItem {Completed = DateTime.UtcNow.AddDays(-1)};
+		var uncompleted = new TodoItem();
+		TodoItems.AddRange(new[] {completed, uncompleted});
+
+		var result = await _handler.Handle(new ListTodoItemsRequest(), CancellationToken.None);
+
+		result.Should().NotContain(completed).And.Contain(uncompleted);
+	}
 }

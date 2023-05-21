@@ -3,7 +3,7 @@ using Todo.Data.Models;
 
 namespace Todo.Api.Handlers;
 
-public record ListTodoItemsRequest : IRequest<IEnumerable<TodoItem>>;
+public record ListTodoItemsRequest(bool ShowCompleted = false) : IRequest<IEnumerable<TodoItem>>;
 
 public class ListTodoItemsHandler : IRequestHandler<ListTodoItemsRequest, IEnumerable<TodoItem>>
 {
@@ -19,6 +19,7 @@ public class ListTodoItemsHandler : IRequestHandler<ListTodoItemsRequest, IEnume
 		return await _todoContext
 			.TodoItems
 			.OrderByDescending(e => e.Created)
+			.Where(e => request.ShowCompleted || e.Completed == null)
 			.ToListAsync(cancellationToken);
 	}
 }
