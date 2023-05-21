@@ -17,9 +17,9 @@ public class CreateTodoItemHandler : IRequestHandler<CreateTodoItemRequest, Guid
 		_dateTimeService = dateTimeService;
 	}
 
-	public Task<Guid> Handle(CreateTodoItemRequest request, CancellationToken cancellationToken)
+	public async Task<Guid> Handle(CreateTodoItemRequest request, CancellationToken cancellationToken)
 	{
-		var validationResult = new CreateTodoItemRequestValidator().Validate(request);
+		var validationResult = await new CreateTodoItemRequestValidator().ValidateAsync(request, cancellationToken);
 		if (!validationResult.IsValid)
 		{
 			throw new ValidationException(validationResult.Errors);
@@ -33,6 +33,7 @@ public class CreateTodoItemHandler : IRequestHandler<CreateTodoItemRequest, Guid
 		};
 
 		_todoContext.TodoItems.Add(item);
-		return Task.FromResult(item.Id);
+		await _todoContext.SaveChangesAsync(cancellationToken);
+		return item.Id;
 	}
 }

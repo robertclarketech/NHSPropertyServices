@@ -11,9 +11,9 @@ public class TodoContext : DbContext, ITodoContext
 	}
 
 	public DbSet<TodoItem> TodoItems => Set<TodoItem>();
-}
 
-public interface ITodoContext
-{
-	DbSet<TodoItem> TodoItems { get; }
+	async Task ITodoContext.SaveChangesAsync(CancellationToken token)
+	{
+		await SaveChangesAsync(token);
+	}
 }

@@ -41,7 +41,7 @@ public class CreateTodoItemHandlerTests : TodoContextTestsBase
 	}
 
 	[Fact]
-	public async Task Todos_throw_validation_exception_if_empty()
+	public async Task Throw_validation_exception_if_empty()
 	{
 		await _handler.Invoking(e => e.Handle(new CreateTodoItemRequest(string.Empty), CancellationToken.None))
 			.Should().ThrowAsync<ValidationException>();
