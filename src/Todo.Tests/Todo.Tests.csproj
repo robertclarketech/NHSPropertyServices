@@ -33,7 +33,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\src\Todo.Api\Todo.Api.csproj" />
+      <ProjectReference Include="..\Todo.Api\Todo.Api.csproj" />
     </ItemGroup>
 
 </Project>
