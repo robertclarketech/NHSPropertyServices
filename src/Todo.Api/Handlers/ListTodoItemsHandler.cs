@@ -1,4 +1,5 @@
-﻿using Todo.Data.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Todo.Data.Models;
 
 namespace Todo.Api.Handlers;
 
@@ -6,15 +7,18 @@ public record ListTodoItemsRequest : IRequest<IEnumerable<TodoItem>>;
 
 public class ListTodoItemsHandler : IRequestHandler<ListTodoItemsRequest, IEnumerable<TodoItem>>
 {
-    private readonly ITodoRepository _todoRepository;
+	private readonly ITodoContext _todoContext;
 
-    public ListTodoItemsHandler(ITodoRepository todoRepository)
-    {
-        _todoRepository = todoRepository;
-    }
+	public ListTodoItemsHandler(ITodoContext todoContext)
+	{
+		_todoContext = todoContext;
+	}
 
-    public async Task<IEnumerable<TodoItem>> Handle(ListTodoItemsRequest request, CancellationToken cancellationToken)
-    {
-        return await _todoRepository.List();
-    }
+	public async Task<IEnumerable<TodoItem>> Handle(ListTodoItemsRequest request, CancellationToken cancellationToken)
+	{
+		return await _todoContext
+			.TodoItems
+			.OrderByDescending(e => e.Created)
+			.ToListAsync(cancellationToken);
+	}
 }

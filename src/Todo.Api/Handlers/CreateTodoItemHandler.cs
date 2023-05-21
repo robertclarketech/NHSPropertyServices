@@ -6,23 +6,23 @@ public record CreateTodoItemRequest(string Text) : IRequest<Guid>;
 
 public class CreateTodoItemHandler : IRequestHandler<CreateTodoItemRequest, Guid>
 {
-    private readonly ITodoRepository _todoRepository;
+	private readonly ITodoContext _todoContext;
 
-    public CreateTodoItemHandler(ITodoRepository todoRepository)
-    {
-        _todoRepository = todoRepository;
-    }
+	public CreateTodoItemHandler(ITodoContext todoContext)
+	{
+		_todoContext = todoContext;
+	}
 
-    public async Task<Guid> Handle(CreateTodoItemRequest request, CancellationToken cancellationToken)
-    {
-        var item = new TodoItem
-        {
-            Created = DateTime.Now,
-            Id = Guid.NewGuid(),
-            Text = request.Text.ToUpperInvariant()
-        };
+	public Task<Guid> Handle(CreateTodoItemRequest request, CancellationToken cancellationToken)
+	{
+		var item = new TodoItem
+		{
+			Created = DateTime.Now,
+			Id = Guid.NewGuid(),
+			Text = request.Text.ToUpperInvariant()
+		};
 
-        var itemId = await _todoRepository.Create(item);
-        return itemId;
-    }
+		_todoContext.TodoItems.Add(item);
+		return Task.FromResult(item.Id);
+	}
 }
