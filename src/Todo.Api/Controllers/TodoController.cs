@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Todo.Api.Handlers;
+using Todo.Api.Handlers.CompleteTodoItem;
 using Todo.Api.Handlers.CreateTodoItem;
+using Todo.Data.Models;
 
 namespace Todo.Api.Controllers;
 
@@ -15,15 +17,22 @@ public class TodoController : ControllerBase
 		_sender = sender;
 	}
 
-	[HttpPost("create")]
-	public async Task<IActionResult> Get([FromBody] CreateTodoItemRequest request)
+	[HttpPost]
+	public async Task<ActionResult<Guid>> Create([FromBody] CreateTodoItemRequest request, CancellationToken token)
 	{
-		return Ok(await _sender.Send(request));
+		return Ok(await _sender.Send(request, token));
 	}
 
-	[HttpGet("list")]
-	public async Task<IActionResult> List()
+	[HttpGet]
+	public async Task<ActionResult<IEnumerable<TodoItem>>> List(CancellationToken token)
 	{
-		return Ok(await _sender.Send(new ListTodoItemsRequest()));
+		return Ok(await _sender.Send(new ListTodoItemsRequest(), token));
+	}
+	
+	[HttpPost("{id:guid}/complete")]
+	public async Task<ActionResult> Complete(Guid id, CancellationToken token)
+	{
+		await _sender.Send(new CompleteTodoItemRequest(id), token);
+		return Ok();
 	}
 }
